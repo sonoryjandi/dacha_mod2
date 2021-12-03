@@ -1,5 +1,3 @@
-import com.sun.java.swing.plaf.windows.WindowsTextAreaUI;
-
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -9,22 +7,40 @@ import java.util.stream.Stream;
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.copyOfRange;
 
-public class ArrayList<R> implements List<R> {
+public class MyArrayList<R> implements List<R> {
 
     private Object[] array;
     private int size;
 
-    public ArrayList(Object[] array) {
+    // region getter/setter
+    public Object[] getArray() {
+        return array;
+    }
+
+    public void setArray(Object[] array) {
+        this.array = array;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+    // endregion
+
+    public MyArrayList(Object[] array) {
         this.array = copyOf(array, array.length);
         this.size = array.length;
     }
 
-    public ArrayList() {
+    public MyArrayList() {
         this.array = new Object[0];
         this.size = 0;
     }
 
-    public ArrayList(int length) {
+    public MyArrayList(int length) {
         this.array = new Object[length];
         this.size = 0;
     }
@@ -227,7 +243,13 @@ public class ArrayList<R> implements List<R> {
     @Override
     public List<R> subList(int fromIndex, int toIndex) {
         Object[] subArray = copyOfRange(array, fromIndex, toIndex);
-        return new ArrayList<R>(subArray);
+        return new MyArrayList<R>(subArray);
+    }
+
+    public void print (){
+        for (int i = 0; i < size; i++) {
+            System.out.println(array[i]);
+        }
     }
 
     // region methods
@@ -278,7 +300,7 @@ public class ArrayList<R> implements List<R> {
 
     @Override
     public R get(int index) {
-        return null;
+        return (R) array[index];
     }
 
     @Override
