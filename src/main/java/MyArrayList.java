@@ -4,9 +4,6 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.copyOf;
-import static java.util.Arrays.copyOfRange;
-
 public class MyArrayList<R> implements List<R> {
 
     private R[] array;
