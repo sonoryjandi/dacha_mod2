@@ -9,15 +9,15 @@ import static java.util.Arrays.copyOfRange;
 
 public class MyArrayList<R> implements List<R> {
 
-    private Object[] array;
+    private R[] array;
     private int size;
 
     // region getter/setter
-    public Object[] getArray() {
+    public R[] getArray() {
         return array;
     }
 
-    public void setArray(Object[] array) {
+    public void setArray(R[] array) {
         this.array = array;
     }
 
@@ -30,18 +30,18 @@ public class MyArrayList<R> implements List<R> {
     }
     // endregion
 
-    public MyArrayList(Object[] array) {
+    public MyArrayList(R[] array) {
         this.array = copyOf(array, array.length);
         this.size = array.length;
     }
 
     public MyArrayList() {
-        this.array = new Object[0];
+        this.array = (R[]) new Object[0];
         this.size = 0;
     }
 
     public MyArrayList(int length) {
-        this.array = new Object[length];
+        this.array = (R[]) new Object[length];
         this.size = 0;
     }
 
@@ -84,8 +84,8 @@ public class MyArrayList<R> implements List<R> {
      */
     @Override
     public boolean contains(Object o) {
-        for (Object element : array){
-            if (element.equals(o)){
+        for (Object element : array) {
+            if (element.equals(o)) {
                 return true;
             }
         }
@@ -145,8 +145,8 @@ public class MyArrayList<R> implements List<R> {
      */
     @Override
     public boolean remove(Object o) {
-        for (int i = 0; i < size; i++){
-            if (array[i].equals(o)){
+        for (int i = 0; i < size; i++) {
+            if (array[i].equals(o)) {
                 remove(i);
                 return true;
             }
@@ -198,8 +198,8 @@ public class MyArrayList<R> implements List<R> {
      */
     @Override
     public R remove(int index) {
-        R element = (R) array[index];
-        for (int i = index; i < size - 1; i++){
+        R element = array[index];
+        for (int i = index; i < size - 1; i++) {
             array[i] = array[i + 1];
         }
         size--;
@@ -242,14 +242,32 @@ public class MyArrayList<R> implements List<R> {
      */
     @Override
     public List<R> subList(int fromIndex, int toIndex) {
-        Object[] subArray = copyOfRange(array, fromIndex, toIndex);
+        R[] subArray = copyOfRange(array, fromIndex, toIndex);
         return new MyArrayList<R>(subArray);
     }
 
-    public void print (){
+    public void print() {
         for (int i = 0; i < size; i++) {
             System.out.println(array[i]);
         }
+    }
+
+    private R[] copyOf(R[] array, int length) {
+        R[] newArray = (R[]) new Object[length];
+        for (int i = 0; i < array.length; i++) {
+            newArray[i] = array[i];
+        }
+        return newArray;
+    }
+    
+    private R[] copyOfRange(R[] array, int fromIndex, int toIndex){
+        R[] newArray = (R[]) new Object[toIndex - fromIndex];
+        int counter = fromIndex;
+        for (int i = 0; i < newArray.length; i++) {
+            newArray[i] = array[counter];
+            counter++;
+        }
+        return newArray;
     }
 
     // region methods

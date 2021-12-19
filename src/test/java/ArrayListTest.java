@@ -1,8 +1,6 @@
-import com.sun.javafx.scene.control.skin.VirtualFlow;
 import junit.framework.TestCase;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -67,7 +65,7 @@ public class ArrayListTest extends TestCase {
 
     @Test
     public void testRemoveByIndex() {
-        MyArrayList<String> arrayTest = new MyArrayList<>(new Object[]{"Kaeya", "Klee", "Diona", "Xiao"});
+        MyArrayList<String> arrayTest = new MyArrayList<>(new String[]{"Kaeya", "Klee", "Diona", "Xiao"});
         arrayTest.remove(1);
         assertThat(!arrayTest.contains("Klee"));
         assertThat(arrayTest.get(1)).isEqualTo("Diona");
@@ -75,13 +73,9 @@ public class ArrayListTest extends TestCase {
 
     @Test
     public void testSubList() {
-        MyArrayList<String> arrayTest = new MyArrayList<>(new Object[]{"Kaeya", "Klee", "Diona", "Xiao"});
+        MyArrayList<String> arrayTest = new MyArrayList<>(new String[]{"Kaeya", "Klee", "Diona", "Xiao"});
         List <String> subList = arrayTest.subList(1, 2);
         assertThat(subList.get(0).equals("Klee"));
         assertThat(subList.size() == 1);
     }
-
-//    private void prepareForTest() {
-//        MyArrayList<String> arrayTest = new MyArrayList<>();
-//    }
 }
