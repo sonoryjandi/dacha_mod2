@@ -1,41 +1,20 @@
 package amalysheva;
 
-public class Column { // столбец
-    private String name;
-    private Object data;
+public class Column { //<T extends Comparable<?>>
+    private final String title; // имя столбца
+    private final Class<? extends Comparable<?>> classType; // тип данных
+//    private T data;
 
-    public Column(String name) {
-        this.name = name;
+    public Column(String name, Class<? extends Comparable<?>> classType) {
+        this.title = name;
+        this.classType = classType;
     }
 
-    public Column(Object data) {
-        this.data = data;
+    public String getTitle() {
+        return title;
     }
 
-    public Column(String name, Object data) {
-        this.name = name;
-        this.data = data;
+    public Class<? extends Comparable<?>> getClassType() {
+        return classType;
     }
-
-    public Column() {
-
-    }
-
-    // region set/get
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
-    // endregion
 }
