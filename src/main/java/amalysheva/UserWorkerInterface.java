@@ -1,3 +1,5 @@
+package amalysheva;
+
 public interface UserWorkerInterface {
     boolean saveIntoFile();
 

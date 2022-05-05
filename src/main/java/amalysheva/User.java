@@ -1,16 +1,20 @@
+package amalysheva;
+
 import java.util.Objects;
 
 public class User {
     private int id;
+    private String nickname;
     private String name;
     private int age;
-    private String permissions;
+    private String grade;
 
-    public User(int id, String name, int age, String permissions) {
+    public User(int id, String nickname, String name, int age, String grade) {
         this.id = id;
+        this.nickname = nickname;
         this.name = name;
         this.age = age;
-        this.permissions = permissions;
+        this.grade = grade;
     }
 
     //region get/set
@@ -21,6 +25,14 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getName() {
@@ -39,12 +51,12 @@ public class User {
         this.age = age;
     }
 
-    public String getPermissions() {
-        return permissions;
+    public String getGrade() {
+        return grade;
     }
 
-    public void setPermissions(String permissions) {
-        this.permissions = permissions;
+    public void setGrade(String grade) {
+        this.grade = grade;
     }
     //endregion
 
