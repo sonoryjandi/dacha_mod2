@@ -4,12 +4,12 @@ import java.io.*;
 
 public class UserWorker {
 
-    public boolean saveIntoFile(String directory, User user) throws IOException {
+    public String saveIntoFile(String directory, User user) throws IOException {
         String filename = user.getId() + user.getNickname() + ".csv";
             FileWriter writer = new FileWriter(directory + filename);
             writer.write(user.getId() + "," + user.getNickname() + "," + user.getName() + "," + user.getAge() + "," + user.getGrade());
             writer.close();
-            return true;
+        return filename;
     }
 
 
