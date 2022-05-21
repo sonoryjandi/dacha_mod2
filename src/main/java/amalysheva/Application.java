@@ -1,18 +1,24 @@
 package amalysheva;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Scanner;
+import java.util.logging.FileHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Application {
     public static final Scanner scanner = new Scanner(System.in);
     private String directory;
     private UserWorker userWorker = new UserWorker();
+    private Logger LOG = Logger.getLogger(this.getClass().getName());
 
-    public void start() {
+    public void start() throws IOException {
         menu();
     }
 
-    private void menu() {
+    private void menu() throws IOException {
+        LOG.addHandler(new FileHandler("C:\\Users\\Anastasia\\Desktop\\DirectoryTask\\UserWorkerTest\\status.txt"));
         pathInitialisation();
         while (true) {
             showMenu();
@@ -40,12 +46,13 @@ public class Application {
     private User createUser() {
         System.out.println("Enter id");
         int id = scanner.nextInt();
+        scanner.nextLine();
 
         System.out.println("Enter nickname");
-        String nickname = scanner.next();
+        String nickname = scanner.nextLine();
 
         System.out.println("Enter name");
-        String name = scanner.next();
+        String name = scanner.nextLine();
 
         System.out.println("Enter age");
         int age = scanner.nextInt();
@@ -78,26 +85,23 @@ public class Application {
         String newUserFilename = newUser.getId() + newUser.getNickname() + ".csv";
         try {
             if ((new File(directory, newUserFilename)).exists()) {
-                System.out.println("File does exist. Want to overwrite it? yes/no");
+                LOG.info("File does exist. Want to overwrite it? yes/no");
                 switch (scanner.nextLine()) {
                     case "yes":
-                        userWorker.saveIntoFile(directory, newUser);
-                        System.out.println("User is added");
+                        LOG.info("User " + userWorker.saveIntoFile(directory, newUser) + " is rewritten and added");
                         return true;
                     case "no":
                         System.out.println("Please, rename the file");
-                        userWorker.saveIntoFile(directory, createUser());
-                        System.out.println("User is added");
+                        LOG.info("User " + userWorker.saveIntoFile(directory, createUser()) + " is added");
                         return true;
                     default:
                         System.out.println("Wrong case, try again");
                 }
             } else {
-                userWorker.saveIntoFile(directory, newUser);
-                System.out.println("User is added");
+                LOG.info("User " + userWorker.saveIntoFile(directory, newUser) + " is added");
             }
         } catch (Exception exception) {
-            System.out.println(exception.getMessage());
+            LOG.log(Level.WARNING, exception.getMessage(), exception);
         }
         return true;
     }
@@ -106,10 +110,10 @@ public class Application {
         System.out.println("Enter user filename");
         try {
             String filename = scanner.nextLine();
-            System.out.println("User " + filename + ": " + userWorker.readUserInfo(directory, filename));
+            LOG.info("User " + filename + ": " + userWorker.readUserInfo(directory, filename));
             return true;
         } catch (Exception exception) {
-            System.out.println(exception.getMessage());
+            LOG.log(Level.WARNING, exception.getMessage(), exception);
             return false;
         }
     }
@@ -118,10 +122,11 @@ public class Application {
         System.out.println("Enter user filename you want to delete");
         String filename = scanner.nextLine();
         if (new File(directory + filename + ".csv").exists()) {
-            System.out.println(userWorker.deleteFile(directory, filename + ".csv"));
+            userWorker.deleteFile(directory, filename + ".csv");
+            LOG.info("User " + filename + " is deleted");
             return true;
         }
-        System.out.println("Error. User is not found");
+        LOG.info("Error. User " + filename + " is not found");
         return false;
     }
 
