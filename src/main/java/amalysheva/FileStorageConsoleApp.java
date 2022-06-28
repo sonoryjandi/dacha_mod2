@@ -1,5 +1,10 @@
 package amalysheva;
 
+import amalysheva.entities.Persistable;
+import amalysheva.entities.User;
+import amalysheva.storages.FileStorage;
+import amalysheva.storages.Storage;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -7,18 +12,20 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Application {
+public class FileStorageConsoleApp<T extends Persistable> {
     public static final Scanner scanner = new Scanner(System.in);
     private String directory;
-    private UserWorker userWorker = new UserWorker();
+    //TODO передавать его в конструктор
+    private Storage<T> userWorker;
     private Logger LOG = Logger.getLogger(this.getClass().getName());
+
+    //TODO разделение сервиса и контролера
 
     public void start() throws IOException {
         menu();
     }
 
     private void menu() throws IOException {
-        LOG.addHandler(new FileHandler("C:\\Users\\Anastasia\\Desktop\\DirectoryTask\\UserWorkerTest\\status.txt"));
         pathInitialisation();
         while (true) {
             showMenu();
@@ -43,6 +50,7 @@ public class Application {
         }
     }
 
+    //TODO написать ещё продукт
     private User createUser() {
         System.out.println("Enter id");
         int id = scanner.nextInt();
@@ -81,8 +89,8 @@ public class Application {
     }
 
     private boolean saveIntoFile() {
-        User newUser = createUser();
-        String newUserFilename = newUser.getId() + newUser.getNickname() + ".csv";
+        T newUser = newUser.create();
+        String newUserFilename =  + ".csv";
         try {
             if ((new File(directory, newUserFilename)).exists()) {
                 LOG.info("File does exist. Want to overwrite it? yes/no");
@@ -92,7 +100,7 @@ public class Application {
                         return true;
                     case "no":
                         System.out.println("Please, rename the file");
-                        LOG.info("User " + userWorker.saveIntoFile(directory, createUser()) + " is added");
+                        LOG.info("User " + userWorker.saveIntoFile(directory, create()) + " is added");
                         return true;
                     default:
                         System.out.println("Wrong case, try again");
@@ -100,7 +108,8 @@ public class Application {
             } else {
                 LOG.info("User " + userWorker.saveIntoFile(directory, newUser) + " is added");
             }
-        } catch (Exception exception) {
+        } catch (
+                Exception exception) {
             LOG.log(Level.WARNING, exception.getMessage(), exception);
         }
         return true;
@@ -110,7 +119,7 @@ public class Application {
         System.out.println("Enter user filename");
         try {
             String filename = scanner.nextLine();
-            LOG.info("User " + filename + ": " + userWorker.readUserInfo(directory, filename));
+            LOG.info("User " + filename + ": " + userWorker.readItemInfo(directory, filename));
             return true;
         } catch (Exception exception) {
             LOG.log(Level.WARNING, exception.getMessage(), exception);
@@ -131,7 +140,7 @@ public class Application {
     }
 
     private void showUserList() {
-        userWorker.showUserList(directory);
+        userWorker.getList(directory);
     }
 
     private void showMenu() {

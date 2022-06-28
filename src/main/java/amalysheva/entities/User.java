@@ -1,8 +1,8 @@
-package amalysheva;
+package amalysheva.entities;
 
 import java.util.Objects;
 
-public class User {
+public class User implements Persistable {
     private int id;
     private String nickname;
     private String name;
@@ -61,15 +61,26 @@ public class User {
     //endregion
 
     @Override
-    public boolean equals(Object otherUser) {
-        if (this == otherUser) return true;
-        if (!(otherUser instanceof User)) return false;
-        User user = (User) otherUser;
-        return getId() == user.getId();
+    public String toString(){
+        return getId() + "," + getNickname() + "," + getName() + "," + getAge() + "," + getGrade();
+    }
+
+    @Override
+    public String getFilename() {
+        return getId() + getNickname() + ".csv";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return getId() == user.getId() &&
+                getNickname().equals(user.getNickname());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId());
+        return Objects.hash(getId(), getNickname());
     }
 }
