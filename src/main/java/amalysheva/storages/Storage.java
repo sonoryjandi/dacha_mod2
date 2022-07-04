@@ -2,14 +2,17 @@ package amalysheva.storages;
 
 import amalysheva.entities.Persistable;
 
+import java.io.File;
 import java.io.IOException;
 
 public interface Storage<T extends Persistable>{
-    T saveIntoFile(String directory, T type, boolean isOverwrited) throws IOException;
+    T saveIntoFile(File directory, T item, boolean overwritingAllowed) throws IOException;
     
-    T readItemInfo(String directory, String filename) throws IOException;
+    T readItemInfo(File directory, String filename) throws IOException;
 
-    T deleteFile(String directory, String filename) throws IOException;
+    T deleteFile(File directory, String filename) throws IOException;
 
-    String[] getList(String directory);
+    String[] getList(File directory);
+
+    String getSubDir();
 }

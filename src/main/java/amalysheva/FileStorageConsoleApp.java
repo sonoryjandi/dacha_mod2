@@ -1,31 +1,20 @@
 package amalysheva;
 
 import amalysheva.entities.Persistable;
-import amalysheva.entities.User;
-import amalysheva.storages.FileStorage;
 import amalysheva.storages.Storage;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class FileStorageConsoleApp<T extends Persistable> {
+public abstract class FileStorageConsoleApp<T extends Persistable> {
     public static final Scanner scanner = new Scanner(System.in);
-    private String directory;
-    //TODO передавать его в конструктор
-    private Storage<T> userWorker;
-    private Logger LOG = Logger.getLogger(this.getClass().getName());
+    private File directory;
+    private Storage<T> storage;
+    private final Logger LOG = Logger.getLogger(this.getClass().getName());
 
-    //TODO разделение сервиса и контролера
-
-    public void start() throws IOException {
-        menu();
-    }
-
-    private void menu() throws IOException {
+    public void start() {
         pathInitialisation();
         while (true) {
             showMenu();
@@ -34,7 +23,7 @@ public class FileStorageConsoleApp<T extends Persistable> {
                     saveIntoFile();
                     break;
                 case "2":
-                    readUserInfo();
+                    readFromFile();
                     break;
                 case "3":
                     deleteFile();
@@ -50,76 +39,43 @@ public class FileStorageConsoleApp<T extends Persistable> {
         }
     }
 
-    //TODO написать ещё продукт
-    private User createUser() {
-        System.out.println("Enter id");
-        int id = scanner.nextInt();
-        scanner.nextLine();
-
-        System.out.println("Enter nickname");
-        String nickname = scanner.nextLine();
-
-        System.out.println("Enter name");
-        String name = scanner.nextLine();
-
-        System.out.println("Enter age");
-        int age = scanner.nextInt();
-
-        System.out.println("Enter grade");
-        String grade = scanner.next();
-        scanner.nextLine();
-
-        return new User(id, nickname, name, age, grade);
-    }
-
     private void pathInitialisation() {
-        System.out.println("Directory:");
-        while (true) {
-            String pathForCheck = scanner.nextLine();
-            if (new File(pathForCheck).exists()) {
-                this.directory = pathForCheck;
-                break;
-            }
-            System.out.println("Wrong directory path, try again");
-        }
-        char[] directoryLastSignForCheck = directory.toCharArray();
-        if (directoryLastSignForCheck[directoryLastSignForCheck.length - 1] != '\\') {
-            directory += '\\';
-        }
+//        System.out.println("Directory:");
+//        while (true) {
+//            String pathForCheck = scanner.nextLine();
+//            if (new File(pathForCheck).exists()) {
+//                this.directory = pathForCheck;
+//                break;
+//            }
+//            System.out.println("Wrong directory path, try again");
+//        }
+//        char[] directoryLastSignForCheck = directory.toCharArray();
+//        if (directoryLastSignForCheck[directoryLastSignForCheck.length - 1] != '\\') {
+//            directory += '\\';
+//        }
+
+        directory = new File(storage.getSubDir(), "Stuff");
     }
 
     private boolean saveIntoFile() {
-        T newUser = newUser.create();
-        String newUserFilename =  + ".csv";
+        T newItem = initialization();
+        System.out.println("If file exist, do you want to overwrite it? yes - 1, no - 0");
+        boolean answer = scanner.nextBoolean();
         try {
-            if ((new File(directory, newUserFilename)).exists()) {
-                LOG.info("File does exist. Want to overwrite it? yes/no");
-                switch (scanner.nextLine()) {
-                    case "yes":
-                        LOG.info("User " + userWorker.saveIntoFile(directory, newUser) + " is rewritten and added");
-                        return true;
-                    case "no":
-                        System.out.println("Please, rename the file");
-                        LOG.info("User " + userWorker.saveIntoFile(directory, create()) + " is added");
-                        return true;
-                    default:
-                        System.out.println("Wrong case, try again");
-                }
-            } else {
-                LOG.info("User " + userWorker.saveIntoFile(directory, newUser) + " is added");
-            }
-        } catch (
-                Exception exception) {
+            LOG.info("Item " + storage.saveIntoFile(directory, newItem, answer) + " is added");
+        } catch (Exception exception) {
             LOG.log(Level.WARNING, exception.getMessage(), exception);
         }
         return true;
     }
 
-    private boolean readUserInfo() {
-        System.out.println("Enter user filename");
+    abstract T initialization();
+
+    private boolean readFromFile() {
+        System.out.println("Enter item filename");
         try {
             String filename = scanner.nextLine();
-            LOG.info("User " + filename + ": " + userWorker.readItemInfo(directory, filename));
+            LOG.info("Item " + filename + ": " + storage.readItemInfo(directory, filename));
             return true;
         } catch (Exception exception) {
             LOG.log(Level.WARNING, exception.getMessage(), exception);
@@ -128,19 +84,20 @@ public class FileStorageConsoleApp<T extends Persistable> {
     }
 
     private boolean deleteFile() {
-        System.out.println("Enter user filename you want to delete");
-        String filename = scanner.nextLine();
-        if (new File(directory + filename + ".csv").exists()) {
-            userWorker.deleteFile(directory, filename + ".csv");
-            LOG.info("User " + filename + " is deleted");
+        try {
+            System.out.println("Enter item filename you want to delete");
+            String filename = scanner.nextLine();
+            storage.deleteFile(directory, filename + ".csv");
+            LOG.info("Item " + filename + " is deleted");
             return true;
+        } catch (Exception exception) {
+            LOG.log(Level.WARNING, exception.getMessage(), exception);
         }
-        LOG.info("Error. User " + filename + " is not found");
         return false;
     }
 
     private void showUserList() {
-        userWorker.getList(directory);
+        storage.getList(directory);
     }
 
     private void showMenu() {
@@ -150,4 +107,6 @@ public class FileStorageConsoleApp<T extends Persistable> {
                 "4. Show list of files\n" +
                 "0. Exit");
     }
+
+    abstract String getSubDir();
 }

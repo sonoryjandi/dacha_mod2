@@ -2,7 +2,7 @@ package amalysheva.storages;
 
 import amalysheva.entities.Product;
 
-public class ProductFileStorage extends FileStorage<Product> {
+public abstract class ProductFileStorage extends FileStorage<Product> {
     @Override
     protected Product deserialize(String answer) {
         String[] fields = answer.split(",");

@@ -3,8 +3,7 @@ package amalysheva.storages;
 
 import amalysheva.entities.User;
 
-public class UserFileStorage extends FileStorage<User> {
-
+public abstract class UserFileStorage extends FileStorage<User> {
     @Override
     protected User deserialize(String answer) {
         String[] fields = answer.split(",");
